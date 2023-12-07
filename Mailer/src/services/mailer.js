@@ -12,7 +12,7 @@ class Mailer {
     this.email_password = process.env.CAPJU_EMAIL_PASSWORD;
   }
 
-  async #getMailContents() {
+  async getMailContents() {
     try {
       const mailContents = await db.connection.query(queryMailContents, {
         type: QueryTypes.SELECT,
@@ -39,7 +39,7 @@ class Mailer {
     let process = [];
     let json;
 
-    json = await this.#getMailContents();
+    json = await this.getMailContents();
 
     if (json.length == 0) {
       return true;
