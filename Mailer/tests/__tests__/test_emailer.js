@@ -110,6 +110,10 @@ describe("Tests mailer functions", () => {
   });
 
   describe("", () =>{
-    
+    it("should send email correctly", async () => {      
+      let mailer = new Mailer();
+      const result = mailer.formatDate('12/28/2023');
+      expect(result).toStrictEqual('28/12/2023');
+    });
   })
 });

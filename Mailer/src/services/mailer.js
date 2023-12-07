@@ -26,8 +26,9 @@ class Mailer {
     }
   }
 
-  #formatDate(date) {
+  formatDate(date) {
     date = new Date(date);
+    console.log("---------------->" + date)
     var day = date.getDate().toString().padStart(2, "0");
     var month = (date.getMonth() + 1).toString().padStart(2, "0");
     var year = date.getFullYear();
@@ -161,7 +162,7 @@ class Mailer {
                         <td>${flow.flow}</td>
                         <td>${flow.process_record}</td>
                         <td>${flow.stage}</td>
-                        <td>${this.#formatDate(flow.start_date)}</td>
+                        <td>${this.formatDate(flow.start_date)}</td>
                         <td>${flow.stage_duration}</td>
                         <td>${flow.delay_days}</td>
                       </tr>
