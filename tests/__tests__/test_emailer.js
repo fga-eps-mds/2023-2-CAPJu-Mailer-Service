@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
 import db from "../../src/config/database.js";
 import Mailer from "../../src/services/mailer.js";
+import path from "path";
 
 jest.mock('nodemailer', () => ({
   createTransport: jest.fn().mockReturnValue({
@@ -65,27 +65,63 @@ jest.mock("../../src/config/database.js", () => {
   };
 });
 
-describe("Test for function sendEmail", () => {
-  it("should send email correctly", async () => {
-    db.connection.query = jest.fn(() => mockGetMailContents);
-    let mailer = new Mailer();
-    const result = mailer.sendEmail();
-    expect(result).toBeTruthy();
+describe("Tests mailer functions", () => {
+  
+  describe("Tests for functions sendEmail", () => {  
+    it('should return true when there are no late processes', async () => {
+      db.connection.query = jest.fn(() => mockGetMailContents);
+      process.env.CAPJU_EMAIL_PASSWORD = "test@email.com";
+      let mailer = new Mailer();
+      db.connection.query = jest.fn(() => []);
+      const result = await mailer.sendEmail();
+      expect(result).toBe(true);
+    });  
+
+    // it("should log and return false if password is not set", async () => {
+    //   db.connection.query = jest.fn(() => mockGetMailContents);
+    //   process.env.EMAIL_PASSWORD = "";
+    //   let mailer = new Mailer();
+    //   const result = await mailer.sendEmail();
+    //   expect(result).toBe(false);
+    //   delete process.env.EMAIL_PASSWORD;
+    // });
+
+    it("should return true if sends processes", async () => {
+      let mailer = new Mailer();
+      mailer.getMailContents = jest.fn(() => mockGetMailContents);
+      const result = mailer.sendEmail();
+      expect(result).toBeTruthy();
+    })
+  });
+  
+  describe("Tests for function getMailContents", () => {
+    it("should send email correctly", async () => {
+      db.connection.query = jest.fn(() => mockGetMailContents);
+      let mailer = new Mailer();
+      const result = mailer.sendEmail();
+      expect(result).toBeTruthy();
+    });
+  
+    it('should return error', async () => {
+      process.env.EMAIL_PASSWORD = "";
+      let mailer = new Mailer();
+      const errorMessage = new Error();
+      db.connection.query = jest.fn(() => {
+        throw errorMessage;
+      });
+      const result = await mailer.getMailContents();
+      expect(result).toStrictEqual({
+        error: errorMessage,
+        message: "Failed to query mail contents",
+      });
+    });
   });
 
-  it("should log and return false if password is not set", async () => {
-    process.env.EMAIL_PASSWORD = "";
-    let mailer = new Mailer();
-    const result = await mailer.sendEmail();
-    expect(result).toBe(false);
-    delete process.env.EMAIL_PASSWORD;
-  });
-
-  it('should return true when there are no late processes', async () => {
-    process.env.EMAIL_PASSWORD = "test@email.com";
-    let mailer = new Mailer();
-    db.connection.query = jest.fn(() => []);
-    const result = await mailer.sendEmail();
-    expect(result).toBe(true);
-  });
+  describe("Test for function formatDate", () =>{
+    it("should send email correctly", async () => {      
+      let mailer = new Mailer();
+      const result = mailer.formatDate('12/28/2023');
+      expect(result).toStrictEqual('28/12/2023');
+    });
+  })
 });

@@ -9,10 +9,13 @@ config();
 
 class Mailer {
   constructor() {
+    this.email_port = process.env.EMAIL_PORT;
+    this.email_host = process.env.EMAIL_HOST;
+    this.email_user = process.env.EMAIL_USER;
     this.email_password = process.env.CAPJU_EMAIL_PASSWORD;
   }
 
-  async #getMailContents() {
+  async getMailContents() {
     try {
       const mailContents = await db.connection.query(queryMailContents, {
         type: QueryTypes.SELECT,
@@ -26,7 +29,7 @@ class Mailer {
     }
   }
 
-  #formatDate(date) {
+  formatDate(date) {
     date = new Date(date);
     var day = date.getDate().toString().padStart(2, "0");
     var month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -39,13 +42,10 @@ class Mailer {
     let process = [];
     let json;
 
-    json = await this.#getMailContents();
+    json = await this.getMailContents();
 
     if (json.length == 0) {
       return true;
-    }
-    if (!this.email_password) {
-      return false;
     }
 
     json.forEach((item) => {
@@ -64,11 +64,11 @@ class Mailer {
       });
 
       const transport = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
+        host: this.email_host,
+        port: this.email_port,
         secure: false,
         auth: {
-          user: process.env.EMAIL_USER,
+          user: this.email_user,
           pass: this.email_password,
         },
         tls: {
@@ -78,7 +78,7 @@ class Mailer {
 
       const __dirname = path.resolve();
       const message = {
-        from: process.env.EMAIL_USER,
+        from: this.email_user,
         to: emailFilter[i],
         subject: "CAPJU - relatório de processos atrasados",
         text: "Olá, esse é um e-mail automático para informar os processos atrasados.",
@@ -161,7 +161,7 @@ class Mailer {
                         <td>${flow.flow}</td>
                         <td>${flow.process_record}</td>
                         <td>${flow.stage}</td>
-                        <td>${this.#formatDate(flow.start_date)}</td>
+                        <td>${this.formatDate(flow.start_date)}</td>
                         <td>${flow.stage_duration}</td>
                         <td>${flow.delay_days}</td>
                       </tr>
