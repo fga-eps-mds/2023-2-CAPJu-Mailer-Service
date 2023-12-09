@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+  mailer:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: mailer
+    command:
+      [
+        "/tmp/wait-for-it.sh",
+        "db:5432",
+        "--",
+        "npm",
+        "run",
+        "start",
+      ]
+    restart: always
+    volumes:
+      - ./:/app
+      - ./wait-fot-it.sh:/tmp/wait-for-it.sh
+    ports:
+      - 8087:8087
+    networks:
+      - capju
+    env_file:
+      - .env
+
+networks:
+  capju:
+    external: true
