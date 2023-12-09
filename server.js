@@ -12,6 +12,8 @@ db.authenticate()
         console.log('Unable to connect to the database:', err);
     });
 
+mailer.sendEmail();
+
 cron.schedule("0 0 0 * * *", () => {
     mailer.sendEmail();
 });

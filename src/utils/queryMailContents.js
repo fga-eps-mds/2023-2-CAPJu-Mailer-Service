@@ -14,13 +14,11 @@ from \
     users u \
 join "flowUser" fu on \
     fu.cpf = u.cpf \
-join "flowProcess" fp on \
-    fp."idFlow" = fu."idFlow" \
 join process p on \
-    p.record = fp.record \
+    p."idFlow" = fu."idFlow" \
 join stage s on \
     s."idStage" = p."idStage" \
 join flow f on \
-    f."idFlow" = fp."idFlow" \
+    f."idFlow" = p."idFlow" \
 where \
     extract(day from (current_timestamp - p."effectiveDate")) > cast(s.duration as integer)';

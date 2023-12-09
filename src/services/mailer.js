@@ -17,7 +17,7 @@ class Mailer {
 
   async getMailContents() {
     try {
-      const mailContents = await db.connection.query(queryMailContents, {
+      const mailContents = await db.query(queryMailContents, {
         type: QueryTypes.SELECT,
       });
       return mailContents;
@@ -181,17 +181,17 @@ class Mailer {
         attachments: [
           {
             filename: "capju.png",
-            path: __dirname + "/src/assets/capju.png",
+            path: __dirname + "/assets/capju.png",
             cid: "capju",
           },
           {
             filename: "justica_federal.png",
-            path: __dirname + "/src/assets/justica_federal.png",
+            path: __dirname + "/assets/justica_federal.png",
             cid: "justica_federal",
           },
           {
             filename: "UnB.png",
-            path: __dirname + "/src/assets/UnB.png",
+            path: __dirname + "/assets/UnB.png",
             cid: "UnB",
           },
         ],
