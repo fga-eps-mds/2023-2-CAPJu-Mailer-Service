@@ -56,7 +56,7 @@ class Mailer {
     let emailFilter = emails.filter(
       (email, idx) => emails.indexOf(email) === idx
     );
-    console.log("--------->2", emailFilter)
+
     for (let i = 0; i < emailFilter.length; i++) {
       let process = [];
 
@@ -95,8 +95,8 @@ class Mailer {
         </tr>
         `;
         }).join("")
-      console.log(process);
-      //html = html.replace("[NOME]", process[0].name);
+
+      html = html.replace("[NOME]", process[0].name);
       html = html.replace("[TABELA]", table);
 
       const message = {
