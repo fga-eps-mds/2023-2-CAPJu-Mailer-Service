@@ -52,11 +52,12 @@ class Mailer {
       emails.push(item.email);
     });
 
+    
     let emailFilter = emails.filter(
       (email, idx) => emails.indexOf(email) === idx
     );
-
-    for (let i = 0; i < emails.length; i++) {
+    console.log("--------->2", emailFilter)
+    for (let i = 0; i < emailFilter.length; i++) {
       let process = [];
 
       json.forEach((item) => {
@@ -94,8 +95,8 @@ class Mailer {
         </tr>
         `;
         }).join("")
-
-      html = html.replace("[NOME]", process[0].name);
+      console.log(process);
+      //html = html.replace("[NOME]", process[0].name);
       html = html.replace("[TABELA]", table);
 
       const message = {
