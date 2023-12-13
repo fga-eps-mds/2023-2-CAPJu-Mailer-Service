@@ -9,7 +9,7 @@ s."name" as stage, \
 p."effectiveDate" as start_date, \
 s.duration as stage_duration, \
 u.email as email, \
-u."fullName" as "name" \
+u."fullName" as "name", \
 extract(day from (current_timestamp - p."effectiveDate")) - cast(s.duration as integer) as delay_days \
 from \
     users u \
